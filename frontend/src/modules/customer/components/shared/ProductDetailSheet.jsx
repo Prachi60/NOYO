@@ -228,442 +228,442 @@ const ProductDetailSheet = () => {
                     >
                         {/* Parent flex container that holds both sides together so the whole modal scrolls */}
                         <div className="flex w-full min-h-full">
-                                {/* Left: Image Gallery — sticky to window so it doesn't scroll out of view if you want */}
-                                <div className="relative w-[42%] lg:w-[44%] flex-shrink-0 flex flex-col min-h-full sticky top-0" style={{ background: 'linear-gradient(145deg, #f9fafb 0%, #f0f9ff 50%, #fafbfc 100%)' }}>
-                                    {/* Top bar with back + wishlist */}
-                                    <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-5 z-20">
-                                        <motion.button
-                                            whileHover={{ scale: 1.05 }}
-                                            whileTap={{ scale: 0.9 }}
-                                            onClick={closeProduct}
-                                            className="w-10 h-10 bg-white/95 backdrop-blur-md rounded-xl shadow-md shadow-black/5 flex items-center justify-center hover:shadow-lg transition-all border border-gray-100/80"
+                            {/* Left: Image Gallery — sticky to window so it doesn't scroll out of view if you want */}
+                            <div className="relative w-[42%] lg:w-[44%] flex-shrink-0 flex flex-col min-h-full sticky top-0" style={{ background: 'linear-gradient(145deg, #f9fafb 0%, #f0f9ff 50%, #fafbfc 100%)' }}>
+                                {/* Top bar with back + wishlist */}
+                                <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-5 z-20">
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.9 }}
+                                        onClick={closeProduct}
+                                        className="w-10 h-10 bg-white/95 backdrop-blur-md rounded-xl shadow-md shadow-black/5 flex items-center justify-center hover:shadow-lg transition-all border border-gray-100/80"
+                                    >
+                                        <ArrowLeft size={18} className="text-gray-700" strokeWidth={2.5} />
+                                    </motion.button>
+
+                                    {/* Discount Badge (center) */}
+                                    {(selectedProduct.originalPrice > selectedProduct.price) && (
+                                        <motion.div
+                                            initial={{ scale: 0, rotate: -10 }}
+                                            animate={{ scale: 1, rotate: 0 }}
+                                            transition={{ type: 'spring', delay: 0.2 }}
+                                            className="bg-gradient-to-r from-[#45B0E2] to-[#45B0E2] text-white text-[10px] font-[800] px-3 py-1.5 rounded-xl uppercase tracking-wider shadow-md shadow-sky-200/40"
                                         >
-                                            <ArrowLeft size={18} className="text-gray-700" strokeWidth={2.5} />
-                                        </motion.button>
+                                            {Math.round(((selectedProduct.originalPrice - selectedProduct.price) / selectedProduct.originalPrice) * 100)}% OFF
+                                        </motion.div>
+                                    )}
 
-                                        {/* Discount Badge (center) */}
-                                        {(selectedProduct.originalPrice > selectedProduct.price) && (
-                                            <motion.div
-                                                initial={{ scale: 0, rotate: -10 }}
-                                                animate={{ scale: 1, rotate: 0 }}
-                                                transition={{ type: 'spring', delay: 0.2 }}
-                                                className="bg-gradient-to-r from-[#45B0E2] to-[#45B0E2] text-white text-[10px] font-[800] px-3 py-1.5 rounded-xl uppercase tracking-wider shadow-md shadow-sky-200/40"
-                                            >
-                                                {Math.round(((selectedProduct.originalPrice - selectedProduct.price) / selectedProduct.originalPrice) * 100)}% OFF
-                                            </motion.div>
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.9 }}
+                                        onClick={toggleWishlist}
+                                        className={cn(
+                                            "w-10 h-10 backdrop-blur-md rounded-xl shadow-md shadow-black/5 flex items-center justify-center hover:shadow-lg transition-all border",
+                                            isWishlisted ? "bg-red-50/95 border-red-100" : "bg-white/95 border-gray-100/80"
                                         )}
+                                    >
+                                        <Heart size={18} className={cn(
+                                            "transition-all",
+                                            isWishlisted ? 'text-red-500 fill-red-500' : 'text-gray-400 hover:text-red-400'
+                                        )} />
+                                    </motion.button>
+                                </div>
 
-                                        <motion.button
-                                            whileHover={{ scale: 1.05 }}
-                                            whileTap={{ scale: 0.9 }}
-                                            onClick={toggleWishlist}
-                                            className={cn(
-                                                "w-10 h-10 backdrop-blur-md rounded-xl shadow-md shadow-black/5 flex items-center justify-center hover:shadow-lg transition-all border",
-                                                isWishlisted ? "bg-red-50/95 border-red-100" : "bg-white/95 border-gray-100/80"
-                                            )}
-                                        >
-                                            <Heart size={18} className={cn(
-                                                "transition-all",
-                                                isWishlisted ? 'text-red-500 fill-red-500' : 'text-gray-400 hover:text-red-400'
-                                            )} />
-                                        </motion.button>
-                                    </div>
-
-                                    {/* Main content area: vertical thumbnails + main image */}
-                                    <div className="flex-1 flex mt-[64px] mb-3 overflow-hidden">
-                                        {/* Vertical thumbnail strip (left side) */}
-                                        {allImages.length > 1 && (
-                                            <div className="flex flex-col gap-2 px-3 py-2 overflow-y-auto no-scrollbar">
-                                                {allImages.slice(0, 5).map((img, i) => (
-                                                    <motion.button
-                                                        key={i}
-                                                        whileHover={{ scale: 1.08 }}
-                                                        whileTap={{ scale: 0.95 }}
-                                                        onClick={() => setActiveImageIndex(i)}
-                                                        className={cn(
-                                                            'w-[52px] h-[52px] lg:w-14 lg:h-14 rounded-xl overflow-hidden flex-shrink-0 transition-all duration-300 border-2',
-                                                            i === activeImageIndex
-                                                                ? 'border-[#45B0E2] shadow-lg shadow-sky-100/60 ring-2 ring-sky-100 bg-white'
-                                                                : 'border-gray-200/60 opacity-50 hover:opacity-90 bg-white/60'
-                                                        )}
-                                                    >
-                                                        <img src={img} alt="" className="w-full h-full object-contain p-1.5" />
-                                                    </motion.button>
-                                                ))}
-                                            </div>
-                                        )}
-
-                                        {/* Main image viewer */}
-                                        <div className="flex-1 flex items-center justify-center p-6 lg:p-8 relative min-h-[350px]">
-                                            <AnimatePresence mode="wait">
-                                                <motion.img
-                                                    key={activeImageIndex}
-                                                    initial={{ scale: 0.93, opacity: 0 }}
-                                                    animate={{ scale: 1, opacity: 1 }}
-                                                    exit={{ scale: 0.93, opacity: 0 }}
-                                                    transition={{ duration: 0.15 }}
-                                                    src={allImages[activeImageIndex]}
-                                                    alt={`${selectedProduct.name} ${activeImageIndex + 1}`}
-                                                    className="w-full h-full object-contain mix-blend-multiply drop-shadow-2xl hover:scale-[1.03] transition-transform duration-500 absolute inset-0 m-auto p-12"
-                                                />
-                                            </AnimatePresence>
-                                        </div>
-                                    </div>
-
-                                    {/* Carousel dot indicators */}
+                                {/* Main content area: vertical thumbnails + main image */}
+                                <div className="flex-1 flex mt-[64px] mb-3 overflow-hidden">
+                                    {/* Vertical thumbnail strip (left side) */}
                                     {allImages.length > 1 && (
-                                        <div className="flex justify-center gap-2 pb-5">
-                                            {allImages.map((_, i) => (
-                                                <button
+                                        <div className="flex flex-col gap-2 px-3 py-2 overflow-y-auto no-scrollbar">
+                                            {allImages.slice(0, 5).map((img, i) => (
+                                                <motion.button
                                                     key={i}
+                                                    whileHover={{ scale: 1.08 }}
+                                                    whileTap={{ scale: 0.95 }}
                                                     onClick={() => setActiveImageIndex(i)}
                                                     className={cn(
-                                                        'rounded-full transition-all duration-400',
-                                                        i === activeImageIndex ? 'w-8 h-2 bg-[#45B0E2]' : 'w-2 h-2 bg-gray-300/60 hover:bg-gray-400'
+                                                        'w-[52px] h-[52px] lg:w-14 lg:h-14 rounded-xl overflow-hidden flex-shrink-0 transition-all duration-300 border-2',
+                                                        i === activeImageIndex
+                                                            ? 'border-[#45B0E2] shadow-lg shadow-sky-100/60 ring-2 ring-sky-100 bg-white'
+                                                            : 'border-gray-200/60 opacity-50 hover:opacity-90 bg-white/60'
                                                     )}
-                                                />
+                                                >
+                                                    <img src={img} alt="" className="w-full h-full object-contain p-1.5" />
+                                                </motion.button>
                                             ))}
                                         </div>
                                     )}
+
+                                    {/* Main image viewer */}
+                                    <div className="flex-1 flex items-center justify-center p-6 lg:p-8 relative min-h-[350px]">
+                                        <AnimatePresence mode="wait">
+                                            <motion.img
+                                                key={activeImageIndex}
+                                                initial={{ scale: 0.93, opacity: 0 }}
+                                                animate={{ scale: 1, opacity: 1 }}
+                                                exit={{ scale: 0.93, opacity: 0 }}
+                                                transition={{ duration: 0.15 }}
+                                                src={allImages[activeImageIndex]}
+                                                alt={`${selectedProduct.name} ${activeImageIndex + 1}`}
+                                                className="w-full h-full object-contain mix-blend-multiply drop-shadow-2xl hover:scale-[1.03] transition-transform duration-500 absolute inset-0 m-auto p-12"
+                                            />
+                                        </AnimatePresence>
+                                    </div>
                                 </div>
 
-                                {/* Right: Product Info (scrollable naturally) */}
-                                <div className="flex-1 flex flex-col bg-white">
-                                    <div className="flex-1 px-7 py-6 lg:px-8 lg:py-7 space-y-3">
+                                {/* Carousel dot indicators */}
+                                {allImages.length > 1 && (
+                                    <div className="flex justify-center gap-2 pb-5">
+                                        {allImages.map((_, i) => (
+                                            <button
+                                                key={i}
+                                                onClick={() => setActiveImageIndex(i)}
+                                                className={cn(
+                                                    'rounded-full transition-all duration-400',
+                                                    i === activeImageIndex ? 'w-8 h-2 bg-[#45B0E2]' : 'w-2 h-2 bg-gray-300/60 hover:bg-gray-400'
+                                                )}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
 
-                                        {/* Top badges row */}
-                                        <div className="flex items-center gap-2 flex-wrap">
-                                            <motion.div
-                                                initial={{ opacity: 0, x: -10 }}
-                                                animate={{ opacity: 1, x: 0 }}
-                                                transition={{ delay: 0.1 }}
-                                                className="inline-flex items-center gap-1.5 bg-[#f0fdf4] border border-sky-200/50 text-[#45B0E2] px-3 py-1.5 rounded-lg text-[10px] font-[700] uppercase tracking-wider"
-                                            >
-                                                <Clock size={12} strokeWidth={2.5} className="text-[#45B0E2]" />
-                                                {selectedProduct.deliveryTime || '8-15 MINS'}
-                                            </motion.div>
-                                            {selectedProduct.originalPrice > selectedProduct.price && (
-                                                <motion.div
-                                                    initial={{ opacity: 0, x: -10 }}
-                                                    animate={{ opacity: 1, x: 0 }}
-                                                    transition={{ delay: 0.15 }}
-                                                    className="text-[10px] font-[700] text-[#45B0E2] bg-sky-50 px-3 py-1.5 rounded-lg border border-sky-200/50 uppercase tracking-wider"
-                                                >
-                                                    💰 Save ₹{selectedProduct.originalPrice - selectedProduct.price}
-                                                </motion.div>
-                                            )}
-                                            <motion.div
-                                                initial={{ opacity: 0, x: -10 }}
-                                                animate={{ opacity: 1, x: 0 }}
-                                                transition={{ delay: 0.2 }}
-                                                className="flex items-center gap-1 px-2.5 py-1.5 bg-orange-50 text-orange-600 rounded-lg text-[10px] font-[700] border border-orange-100/50"
-                                            >
-                                                <Star size={10} fill="currentColor" />
-                                                {reviews.length > 0 ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1) : '4.8'}
-                                                <span className="text-orange-400 font-medium">({reviews.length > 0 ? reviews.length : '120+'})</span>
-                                            </motion.div>
-                                        </div>
+                            {/* Right: Product Info (scrollable naturally) */}
+                            <div className="flex-1 flex flex-col bg-white">
+                                <div className="flex-1 px-7 py-6 lg:px-8 lg:py-7 space-y-3">
 
-                                        {/* Product Name */}
+                                    {/* Top badges row */}
+                                    <div className="flex items-center gap-2 flex-wrap">
                                         <motion.div
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: 0.15 }}
+                                            initial={{ opacity: 0, x: -10 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: 0.1 }}
+                                            className="inline-flex items-center gap-1.5 bg-[#f0fdf4] border border-sky-200/50 text-[#45B0E2] px-3 py-1.5 rounded-lg text-[10px] font-[700] uppercase tracking-wider"
                                         >
-                                            <h1 className="text-[22px] lg:text-[26px] font-[800] text-[#111827] leading-[1.2] tracking-tight mb-1">
-                                                {selectedProduct.name}
-                                            </h1>
-                                            {selectedProduct.weight && (
-                                                <span className="text-[13px] text-gray-400 font-[600]">{selectedProduct.weight}</span>
-                                            )}
+                                            <Clock size={12} strokeWidth={2.5} className="text-[#45B0E2]" />
+                                            {selectedProduct.deliveryTime || '8-15 MINS'}
                                         </motion.div>
-
-                                        {/* Price + Add-to-Cart Card */}
+                                        {selectedProduct.originalPrice > selectedProduct.price && (
+                                            <motion.div
+                                                initial={{ opacity: 0, x: -10 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ delay: 0.15 }}
+                                                className="text-[10px] font-[700] text-[#45B0E2] bg-sky-50 px-3 py-1.5 rounded-lg border border-sky-200/50 uppercase tracking-wider"
+                                            >
+                                                💰 Save ₹{selectedProduct.originalPrice - selectedProduct.price}
+                                            </motion.div>
+                                        )}
                                         <motion.div
-                                            initial={{ opacity: 0, y: 12 }}
-                                            animate={{ opacity: 1, y: 0 }}
+                                            initial={{ opacity: 0, x: -10 }}
+                                            animate={{ opacity: 1, x: 0 }}
                                             transition={{ delay: 0.2 }}
-                                            className="relative overflow-hidden rounded-[20px] border border-sky-200/60 shadow-sm"
-                                            style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)' }}
+                                            className="flex items-center gap-1 px-2.5 py-1.5 bg-orange-50 text-orange-600 rounded-lg text-[10px] font-[700] border border-orange-100/50"
                                         >
-                                            {/* Decorative subtle patterns */}
-                                            <div className="absolute top-0 right-0 w-32 h-32 bg-sky-500/5 rounded-full blur-3xl" />
-                                            <div className="absolute bottom-0 left-0 w-24 h-24 bg-sky-500/5 rounded-full blur-2xl" />
-
-                                            <div className="relative flex items-center justify-between py-4 px-5">
-                                                <div className="flex flex-col gap-1">
-                                                    <div className="flex items-baseline gap-2">
-                                                        <span className="text-[28px] lg:text-[32px] font-[800] text-[#45B0E2] tracking-tight leading-none">
-                                                            ₹{selectedProduct.price}
-                                                        </span>
-                                                        {selectedProduct.originalPrice > selectedProduct.price && (
-                                                            <span className="text-[14px] text-gray-400 line-through font-[600]">₹{selectedProduct.originalPrice}</span>
-                                                        )}
-                                                    </div>
-                                                    {selectedProduct.originalPrice > selectedProduct.price && (
-                                                        <span className="inline-flex w-fit items-center text-[10px] font-[800] text-red-600 bg-red-50 border border-red-100 px-2 py-0.5 rounded-md uppercase tracking-wide">
-                                                            {Math.round(((selectedProduct.originalPrice - selectedProduct.price) / selectedProduct.originalPrice) * 100)}% off
-                                                        </span>
-                                                    )}
-                                                </div>
-                                                <div>
-                                                    {quantity > 0 ? (
-                                                        <div className="flex items-center gap-1 bg-white border border-sky-200 rounded-xl p-1 shadow-sm">
-                                                            <motion.button whileTap={{ scale: 0.85 }} onClick={handleDecrement} className="w-9 h-9 bg-sky-50 rounded-lg flex items-center justify-center text-sky-700 hover:bg-sky-100 transition-colors">
-                                                                <Minus size={16} strokeWidth={2.5} />
-                                                            </motion.button>
-                                                            <span className="font-[800] text-base text-gray-800 w-8 text-center">{quantity}</span>
-                                                            <motion.button whileTap={{ scale: 0.85 }} onClick={handleIncrement} className="w-9 h-9 bg-[#45B0E2] rounded-lg flex items-center justify-center text-white hover:bg-[#0369a1] transition-colors shadow-sm">
-                                                                <Plus size={16} strokeWidth={2.5} />
-                                                            </motion.button>
-                                                        </div>
-                                                    ) : (
-                                                        <motion.button
-                                                            whileHover={{ scale: 1.02 }}
-                                                            whileTap={{ scale: 0.98 }}
-                                                            onClick={handleAddToCart}
-                                                            className="bg-gradient-to-r from-[#45B0E2] to-[#0284c7] text-white h-11 px-6 rounded-xl font-[800] text-[13px] flex items-center gap-2 shadow-md shadow-sky-200/50 hover:shadow-lg transition-all uppercase tracking-wide border border-sky-700/20"
-                                                        >
-                                                            <ShoppingBag size={15} strokeWidth={2.5} />
-                                                            Add to Cart
-                                                        </motion.button>
-                                                    )}
-                                                </div>
-                                            </div>
+                                            <Star size={10} fill="currentColor" />
+                                            {reviews.length > 0 ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1) : '4.8'}
+                                            <span className="text-orange-400 font-medium">({reviews.length > 0 ? reviews.length : '120+'})</span>
                                         </motion.div>
+                                    </div>
 
-                                        {/* View Cart */}
-                                        {cartCount > 0 && (
-                                            <motion.div
-                                                initial={{ opacity: 0, scale: 0.98 }}
-                                                animate={{ opacity: 1, scale: 1 }}
-                                                className="flex justify-center -mt-1"
-                                            >
-                                                <Link
-                                                    to="/checkout"
-                                                    onClick={closeProduct}
-                                                    className="w-[80%] bg-gradient-to-r from-[#45B0E2] to-[#0284c7] text-white h-[40px] rounded-xl flex items-center justify-between px-4 shadow-md shadow-sky-200/40 hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-[0.98]"
-                                                >
-                                                    <div className="flex items-center gap-2">
-                                                        <ShoppingBag size={14} strokeWidth={2.0} />
-                                                        <span className="text-[12px] font-[700] uppercase tracking-wider">View Cart</span>
-                                                    </div>
-                                                    <div className="flex items-center justify-center gap-1.5 bg-white/10 px-2 py-1 rounded-lg">
-                                                        <span className="text-[13px] font-[800] tracking-tight">₹{cart.reduce((total, item) => total + (item.price * item.quantity), 0)}</span>
-                                                        <ChevronRight size={14} strokeWidth={2.5} />
-                                                    </div>
-                                                </Link>
-                                            </motion.div>
+                                    {/* Product Name */}
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.15 }}
+                                    >
+                                        <h1 className="text-[22px] lg:text-[26px] font-[800] text-[#111827] leading-[1.2] tracking-tight mb-1">
+                                            {selectedProduct.name}
+                                        </h1>
+                                        {selectedProduct.weight && (
+                                            <span className="text-[13px] text-gray-400 font-[600]">{selectedProduct.weight}</span>
                                         )}
+                                    </motion.div>
 
-                                        {/* Variants */}
-                                        {selectedProduct.variants && selectedProduct.variants.length > 0 && (
-                                            <motion.div
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: 1 }}
-                                                transition={{ delay: 0.25 }}
-                                                className="bg-gray-50/60 rounded-xl p-3 border border-gray-100/70"
-                                            >
-                                                <h4 className="text-[10px] font-[700] text-gray-400 uppercase tracking-[0.14em] mb-2.5">Select Variant</h4>
-                                                <div className="flex gap-3 flex-wrap">
-                                                    {selectedProduct.variants.map((v, idx) => (
-                                                        <motion.button
-                                                            key={idx}
-                                                            whileHover={{ scale: 1.03 }}
-                                                            whileTap={{ scale: 0.97 }}
-                                                            onClick={() => setSelectedVariant(v)}
-                                                            className={cn(
-                                                                'px-4 py-2 font-[600] rounded-lg text-[13px] transition-all border-2',
-                                                                selectedVariant?.sku === v.sku
-                                                                    ? 'bg-sky-50 border-[#45B0E2] text-[#45B0E2] shadow-md shadow-sky-100/50'
-                                                                    : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300 hover:shadow-sm'
-                                                            )}
-                                                        >
-                                                            {v.name}
-                                                        </motion.button>
-                                                    ))}
+                                    {/* Price + Add-to-Cart Card */}
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 12 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.2 }}
+                                        className="relative overflow-hidden rounded-[20px] border border-sky-200/60 shadow-sm"
+                                        style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)' }}
+                                    >
+                                        {/* Decorative subtle patterns */}
+                                        <div className="absolute top-0 right-0 w-32 h-32 bg-sky-500/5 rounded-full blur-3xl" />
+                                        <div className="absolute bottom-0 left-0 w-24 h-24 bg-sky-500/5 rounded-full blur-2xl" />
+
+                                        <div className="relative flex items-center justify-between py-4 px-5">
+                                            <div className="flex flex-col gap-1">
+                                                <div className="flex items-baseline gap-2">
+                                                    <span className="text-[28px] lg:text-[32px] font-[800] text-[#45B0E2] tracking-tight leading-none">
+                                                        ₹{selectedProduct.price}
+                                                    </span>
+                                                    {selectedProduct.originalPrice > selectedProduct.price && (
+                                                        <span className="text-[14px] text-gray-400 line-through font-[600]">₹{selectedProduct.originalPrice}</span>
+                                                    )}
                                                 </div>
-                                            </motion.div>
-                                        )}
-
-                                        {/* Decorative Divider */}
-                                        <div className="relative -mt-1 -mb-1">
-                                            <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
-                                            <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2 h-2 bg-white border border-gray-200 rounded-full" />
+                                                {selectedProduct.originalPrice > selectedProduct.price && (
+                                                    <span className="inline-flex w-fit items-center text-[10px] font-[800] text-red-600 bg-red-50 border border-red-100 px-2 py-0.5 rounded-md uppercase tracking-wide">
+                                                        {Math.round(((selectedProduct.originalPrice - selectedProduct.price) / selectedProduct.originalPrice) * 100)}% off
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <div>
+                                                {quantity > 0 ? (
+                                                    <div className="flex items-center gap-1 bg-white border border-sky-200 rounded-xl p-1 shadow-sm">
+                                                        <motion.button whileTap={{ scale: 0.85 }} onClick={handleDecrement} className="w-9 h-9 bg-sky-50 rounded-lg flex items-center justify-center text-sky-700 hover:bg-sky-100 transition-colors">
+                                                            <Minus size={16} strokeWidth={2.5} />
+                                                        </motion.button>
+                                                        <span className="font-[800] text-base text-gray-800 w-8 text-center">{quantity}</span>
+                                                        <motion.button whileTap={{ scale: 0.85 }} onClick={handleIncrement} className="w-9 h-9 bg-[#45B0E2] rounded-lg flex items-center justify-center text-white hover:bg-[#0369a1] transition-colors shadow-sm">
+                                                            <Plus size={16} strokeWidth={2.5} />
+                                                        </motion.button>
+                                                    </div>
+                                                ) : (
+                                                    <motion.button
+                                                        whileHover={{ scale: 1.02 }}
+                                                        whileTap={{ scale: 0.98 }}
+                                                        onClick={handleAddToCart}
+                                                        className="bg-gradient-to-r from-[#45B0E2] to-[#0284c7] text-white h-11 px-6 rounded-xl font-[800] text-[13px] flex items-center gap-2 shadow-md shadow-sky-200/50 hover:shadow-lg transition-all uppercase tracking-wide border border-sky-700/20"
+                                                    >
+                                                        <ShoppingBag size={15} strokeWidth={2.5} />
+                                                        Add to Cart
+                                                    </motion.button>
+                                                )}
+                                            </div>
                                         </div>
+                                    </motion.div>
 
-                                        {/* Description */}
-                                        {cleanDesc && (
-                                            <motion.div
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: 1 }}
-                                                transition={{ delay: 0.3 }}
-                                                className="rounded-[16px] p-5 pb-7 border border-gray-100/70 -mt-1 mb-6 shadow-sm"
-                                                style={{ background: 'linear-gradient(135deg, #fafbfc 0%, #f8fafb 100%)' }}
+                                    {/* View Cart */}
+                                    {cartCount > 0 && (
+                                        <motion.div
+                                            initial={{ opacity: 0, scale: 0.98 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            className="flex justify-center -mt-1"
+                                        >
+                                            <Link
+                                                to="/checkout"
+                                                onClick={closeProduct}
+                                                className="w-[80%] bg-gradient-to-r from-[#45B0E2] to-[#0284c7] text-white h-[40px] rounded-xl flex items-center justify-between px-4 shadow-md shadow-sky-200/40 hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-[0.98]"
                                             >
-                                                <h3 className="font-[800] text-gray-900 mb-3 text-[14px] tracking-tight flex items-center gap-2">
-                                                    <span className="w-1 h-3.5 bg-[#45B0E2] rounded-full" />
-                                                    About this product
-                                                </h3>
-                                                <div
-                                                    className="text-[12.5px] text-gray-500 font-[500] leading-[1.8] pl-3 whitespace-pre-line"
-                                                    dangerouslySetInnerHTML={{ __html: cleanDesc }}
-                                                />
-                                            </motion.div>
-                                        )}
+                                                <div className="flex items-center gap-2">
+                                                    <ShoppingBag size={14} strokeWidth={2.0} />
+                                                    <span className="text-[12px] font-[700] uppercase tracking-wider">View Cart</span>
+                                                </div>
+                                                <div className="flex items-center justify-center gap-1.5 bg-white/10 px-2 py-1 rounded-lg">
+                                                    <span className="text-[13px] font-[800] tracking-tight">₹{cart.reduce((total, item) => total + (item.price * item.quantity), 0)}</span>
+                                                    <ChevronRight size={14} strokeWidth={2.5} />
+                                                </div>
+                                            </Link>
+                                        </motion.div>
+                                    )}
 
-                                        {/* Product Details Grid — with accent icons */}
+                                    {/* Variants */}
+                                    {selectedProduct.variants && selectedProduct.variants.length > 0 && (
                                         <motion.div
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
-                                            transition={{ delay: 0.35 }}
+                                            transition={{ delay: 0.25 }}
+                                            className="bg-gray-50/60 rounded-xl p-3 border border-gray-100/70"
                                         >
-                                            <h3 className="font-[700] text-gray-900 mb-2.5 text-[14px] tracking-tight flex items-center gap-2">
-                                                <span className="w-0.5 h-4 bg-[#45B0E2] rounded-full" />
-                                                Product Details
-                                            </h3>
-                                            <div className="grid grid-cols-2 gap-2.5">
-                                                {[
-                                                    { label: 'Shelf Life', value: '3 Days', emoji: '📅' },
-                                                    { label: 'Country of Origin', value: 'India', emoji: '🇮🇳' },
-                                                    { label: 'FSSAI License', value: '1001234567890', emoji: '🛡️' },
-                                                    { label: 'Customer Care', value: supportEmail, emoji: '📧' }
-                                                ].map((d, idx) => (
-                                                    <motion.div
-                                                        key={d.label}
-                                                        initial={{ opacity: 0, y: 6 }}
-                                                        animate={{ opacity: 1, y: 0 }}
-                                                        transition={{ delay: 0.35 + idx * 0.04 }}
-                                                        className="bg-white p-3 rounded-lg border border-gray-100/70 hover:shadow-sm hover:border-gray-200/70 transition-all duration-300 group"
+                                            <h4 className="text-[10px] font-[700] text-gray-400 uppercase tracking-[0.14em] mb-2.5">Select Variant</h4>
+                                            <div className="flex gap-3 flex-wrap">
+                                                {selectedProduct.variants.map((v, idx) => (
+                                                    <motion.button
+                                                        key={idx}
+                                                        whileHover={{ scale: 1.03 }}
+                                                        whileTap={{ scale: 0.97 }}
+                                                        onClick={() => setSelectedVariant(v)}
+                                                        className={cn(
+                                                            'px-4 py-2 font-[600] rounded-lg text-[13px] transition-all border-2',
+                                                            selectedVariant?.sku === v.sku
+                                                                ? 'bg-sky-50 border-[#45B0E2] text-[#45B0E2] shadow-md shadow-sky-100/50'
+                                                                : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300 hover:shadow-sm'
+                                                        )}
                                                     >
-                                                        <div className="flex items-start gap-2">
-                                                            <span className="text-sm mt-0.5 group-hover:scale-110 transition-transform">{d.emoji}</span>
-                                                            <div>
-                                                                <span className="text-gray-400 text-[9px] block mb-0.5 font-[600] uppercase tracking-[0.1em]">{d.label}</span>
-                                                                <span className="font-[700] text-gray-800 text-[12px]">{d.value}</span>
-                                                            </div>
-                                                        </div>
-                                                    </motion.div>
+                                                        {v.name}
+                                                    </motion.button>
                                                 ))}
                                             </div>
                                         </motion.div>
+                                    )}
 
-                                        {/* Trust Badges */}
+                                    {/* Decorative Divider */}
+                                    <div className="relative -mt-1 -mb-1">
+                                        <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+                                        <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2 h-2 bg-white border border-gray-200 rounded-full" />
+                                    </div>
+
+                                    {/* Description */}
+                                    {cleanDesc && (
                                         <motion.div
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
-                                            transition={{ delay: 0.4 }}
-                                            className="grid grid-cols-3 gap-2"
+                                            transition={{ delay: 0.3 }}
+                                            className="rounded-[16px] p-5 pb-7 border border-gray-100/70 -mt-1 mb-6 shadow-sm"
+                                            style={{ background: 'linear-gradient(135deg, #fafbfc 0%, #f8fafb 100%)' }}
                                         >
-                                            {[
-                                                { icon: '🌿', label: 'Fresh & Organic', sub: 'Farm sourced' },
-                                                { icon: '⚡', label: 'Express Delivery', sub: 'Under 15 mins' },
-                                                { icon: '✅', label: 'Quality Assured', sub: '3x checked' }
-                                            ].map((t, i) => (
-                                                <div key={i} className="text-center p-2.5 rounded-lg bg-gray-50/50 border border-gray-100/40 hover:bg-white hover:border-gray-200/50 hover:shadow-sm transition-all duration-300">
-                                                    <span className="text-base block mb-0.5">{t.icon}</span>
-                                                    <p className="text-[9px] font-[700] text-gray-700 uppercase tracking-wider leading-tight">{t.label}</p>
-                                                    <p className="text-[8px] text-gray-400 font-[500] mt-0.5">{t.sub}</p>
-                                                </div>
-                                            ))}
+                                            <h3 className="font-[800] text-gray-900 mb-3 text-[14px] tracking-tight flex items-center gap-2">
+                                                <span className="w-1 h-3.5 bg-[#45B0E2] rounded-full" />
+                                                About this product
+                                            </h3>
+                                            <div
+                                                className="text-[12.5px] text-gray-500 font-[500] leading-[1.8] pl-3 whitespace-pre-line"
+                                                dangerouslySetInnerHTML={{ __html: cleanDesc }}
+                                            />
                                         </motion.div>
+                                    )}
 
-                                        {/* Decorative Divider */}
-                                        <div className="relative">
-                                            <div className="h-px bg-gradient-to-r from-transparent via-gray-200/80 to-transparent" />
-                                            <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2 h-2 bg-white border border-gray-200 rounded-full" />
+                                    {/* Product Details Grid — with accent icons */}
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ delay: 0.35 }}
+                                    >
+                                        <h3 className="font-[700] text-gray-900 mb-2.5 text-[14px] tracking-tight flex items-center gap-2">
+                                            <span className="w-0.5 h-4 bg-[#45B0E2] rounded-full" />
+                                            Product Details
+                                        </h3>
+                                        <div className="grid grid-cols-2 gap-2.5">
+                                            {[
+                                                { label: 'Shelf Life', value: '3 Days', emoji: '📅' },
+                                                { label: 'Country of Origin', value: 'India', emoji: '🇮🇳' },
+                                                { label: 'FSSAI License', value: '1001234567890', emoji: '🛡️' },
+                                                { label: 'Customer Care', value: supportEmail, emoji: '📧' }
+                                            ].map((d, idx) => (
+                                                <motion.div
+                                                    key={d.label}
+                                                    initial={{ opacity: 0, y: 6 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ delay: 0.35 + idx * 0.04 }}
+                                                    className="bg-white p-3 rounded-lg border border-gray-100/70 hover:shadow-sm hover:border-gray-200/70 transition-all duration-300 group"
+                                                >
+                                                    <div className="flex items-start gap-2">
+                                                        <span className="text-sm mt-0.5 group-hover:scale-110 transition-transform">{d.emoji}</span>
+                                                        <div>
+                                                            <span className="text-gray-400 text-[9px] block mb-0.5 font-[600] uppercase tracking-[0.1em]">{d.label}</span>
+                                                            <span className="font-[700] text-gray-800 text-[12px]">{d.value}</span>
+                                                        </div>
+                                                    </div>
+                                                </motion.div>
+                                            ))}
+                                        </div>
+                                    </motion.div>
+
+                                    {/* Trust Badges */}
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ delay: 0.4 }}
+                                        className="grid grid-cols-3 gap-2"
+                                    >
+                                        {[
+                                            { icon: '🌿', label: 'Fresh & Organic', sub: 'Farm sourced' },
+                                            { icon: '⚡', label: 'Express Delivery', sub: 'Under 15 mins' },
+                                            { icon: '✅', label: 'Quality Assured', sub: '3x checked' }
+                                        ].map((t, i) => (
+                                            <div key={i} className="text-center p-2.5 rounded-lg bg-gray-50/50 border border-gray-100/40 hover:bg-white hover:border-gray-200/50 hover:shadow-sm transition-all duration-300">
+                                                <span className="text-base block mb-0.5">{t.icon}</span>
+                                                <p className="text-[9px] font-[700] text-gray-700 uppercase tracking-wider leading-tight">{t.label}</p>
+                                                <p className="text-[8px] text-gray-400 font-[500] mt-0.5">{t.sub}</p>
+                                            </div>
+                                        ))}
+                                    </motion.div>
+
+                                    {/* Decorative Divider */}
+                                    <div className="relative">
+                                        <div className="h-px bg-gradient-to-r from-transparent via-gray-200/80 to-transparent" />
+                                        <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2 h-2 bg-white border border-gray-200 rounded-full" />
+                                    </div>
+
+                                    {/* Reviews */}
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ delay: 0.45 }}
+                                        className="space-y-4"
+                                    >
+                                        <h3 className="text-[14px] font-[700] text-gray-900 flex items-center justify-between tracking-tight">
+                                            <span className="flex items-center gap-2">
+                                                <span className="w-0.5 h-4 bg-orange-400 rounded-full" />
+                                                Customer Reviews
+                                            </span>
+                                            <div className="flex items-center gap-1 px-2.5 py-1 bg-orange-50 text-orange-600 rounded-lg text-[10px] font-[700] border border-orange-100/50">
+                                                <Star size={10} fill="currentColor" />
+                                                {reviews.length > 0 ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1) : '4.8'}
+                                                <span className="text-orange-400 font-[500] text-[9px]">({reviews.length > 0 ? reviews.length : '120+'} reviews)</span>
+                                            </div>
+                                        </h3>
+
+                                        {/* Review Form */}
+                                        <div className="bg-gradient-to-br from-slate-50/80 to-gray-50/80 p-4 rounded-xl border border-slate-100/70">
+                                            <h4 className="font-[700] text-gray-800 text-[13px] mb-2.5 flex items-center gap-2">
+                                                <MessageSquare size={13} className="text-[#45B0E2]" />
+                                                Rate this product
+                                            </h4>
+                                            <form onSubmit={handleReviewSubmit} className="space-y-2.5">
+                                                <div className="flex gap-1.5">
+                                                    {[1, 2, 3, 4, 5].map((s) => (
+                                                        <motion.button
+                                                            key={s}
+                                                            type="button"
+                                                            whileHover={{ scale: 1.12 }}
+                                                            whileTap={{ scale: 0.9 }}
+                                                            onClick={() => setNewReview({ ...newReview, rating: s })}
+                                                            className={cn(
+                                                                'h-8 w-8 rounded-lg flex items-center justify-center transition-all',
+                                                                newReview.rating >= s ? 'bg-orange-100 text-orange-500 shadow-sm shadow-orange-100' : 'bg-white text-gray-300 border border-gray-100 hover:border-orange-200'
+                                                            )}
+                                                        >
+                                                            <Star size={14} className={cn(newReview.rating >= s && 'fill-current')} />
+                                                        </motion.button>
+                                                    ))}
+                                                </div>
+                                                <textarea value={newReview.comment} onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })} placeholder="Share your experience..." className="w-full bg-white border border-gray-100 rounded-lg p-3 text-[12px] font-[500] min-h-[70px] outline-none focus:border-[#45B0E2]/40 focus:ring-2 focus:ring-sky-50 transition-all resize-none" />
+                                                <Button type="submit" disabled={isSubmittingReview} className="w-full h-9 bg-gray-900 hover:bg-gray-800 text-white font-[700] rounded-lg text-[10px] uppercase tracking-widest transition-all hover:shadow-md active:scale-[0.98]">
+                                                    {isSubmittingReview ? 'Submitting...' : 'Post Review'}
+                                                </Button>
+                                            </form>
                                         </div>
 
-                                        {/* Reviews */}
-                                        <motion.div
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            transition={{ delay: 0.45 }}
-                                            className="space-y-4"
-                                        >
-                                            <h3 className="text-[14px] font-[700] text-gray-900 flex items-center justify-between tracking-tight">
-                                                <span className="flex items-center gap-2">
-                                                    <span className="w-0.5 h-4 bg-orange-400 rounded-full" />
-                                                    Customer Reviews
-                                                </span>
-                                                <div className="flex items-center gap-1 px-2.5 py-1 bg-orange-50 text-orange-600 rounded-lg text-[10px] font-[700] border border-orange-100/50">
-                                                    <Star size={10} fill="currentColor" />
-                                                    {reviews.length > 0 ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1) : '4.8'}
-                                                    <span className="text-orange-400 font-[500] text-[9px]">({reviews.length > 0 ? reviews.length : '120+'} reviews)</span>
-                                                </div>
-                                            </h3>
-
-                                            {/* Review Form */}
-                                            <div className="bg-gradient-to-br from-slate-50/80 to-gray-50/80 p-4 rounded-xl border border-slate-100/70">
-                                                <h4 className="font-[700] text-gray-800 text-[13px] mb-2.5 flex items-center gap-2">
-                                                    <MessageSquare size={13} className="text-[#45B0E2]" />
-                                                    Rate this product
-                                                </h4>
-                                                <form onSubmit={handleReviewSubmit} className="space-y-2.5">
-                                                    <div className="flex gap-1.5">
-                                                        {[1, 2, 3, 4, 5].map((s) => (
-                                                            <motion.button
-                                                                key={s}
-                                                                type="button"
-                                                                whileHover={{ scale: 1.12 }}
-                                                                whileTap={{ scale: 0.9 }}
-                                                                onClick={() => setNewReview({ ...newReview, rating: s })}
-                                                                className={cn(
-                                                                    'h-8 w-8 rounded-lg flex items-center justify-center transition-all',
-                                                                    newReview.rating >= s ? 'bg-orange-100 text-orange-500 shadow-sm shadow-orange-100' : 'bg-white text-gray-300 border border-gray-100 hover:border-orange-200'
-                                                                )}
-                                                            >
-                                                                <Star size={14} className={cn(newReview.rating >= s && 'fill-current')} />
-                                                            </motion.button>
-                                                        ))}
-                                                    </div>
-                                                    <textarea value={newReview.comment} onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })} placeholder="Share your experience..." className="w-full bg-white border border-gray-100 rounded-lg p-3 text-[12px] font-[500] min-h-[70px] outline-none focus:border-[#45B0E2]/40 focus:ring-2 focus:ring-sky-50 transition-all resize-none" />
-                                                    <Button type="submit" disabled={isSubmittingReview} className="w-full h-9 bg-gray-900 hover:bg-gray-800 text-white font-[700] rounded-lg text-[10px] uppercase tracking-widest transition-all hover:shadow-md active:scale-[0.98]">
-                                                        {isSubmittingReview ? 'Submitting...' : 'Post Review'}
-                                                    </Button>
-                                                </form>
-                                            </div>
-
-                                            {/* Reviews List */}
-                                            <div className="space-y-2.5">
-                                                {reviewLoading ? (
-                                                    <div className="flex justify-center py-6"><Loader2 className="animate-spin text-[#45B0E2]" size={20} /></div>
-                                                ) : reviews.length > 0 ? (
-                                                    reviews.map((r, rIdx) => (
-                                                        <motion.div
-                                                            key={r._id}
-                                                            initial={{ opacity: 0, y: 6 }}
-                                                            animate={{ opacity: 1, y: 0 }}
-                                                            transition={{ delay: 0.08 * rIdx }}
-                                                            className="p-3 rounded-lg border border-gray-100/70 space-y-1.5 hover:shadow-sm hover:border-gray-200/70 transition-all duration-300 bg-white"
-                                                        >
-                                                            <div className="flex justify-between items-start">
-                                                                <div className="flex items-center gap-2">
-                                                                    <div className="h-7 w-7 rounded-full bg-gradient-to-br from-sky-100 to-sky-50 flex items-center justify-center text-[9px] font-[800] text-[#45B0E2] ring-1 ring-sky-50">{r.userId?.name?.[0] || 'A'}</div>
-                                                                    <div>
-                                                                        <p className="text-[11px] font-[700] text-gray-800">{r.userId?.name || 'Anonymous'}</p>
-                                                                        <div className="flex gap-0.5">{[...Array(5)].map((_, i) => <Star key={i} size={9} className={cn(i < r.rating ? 'text-orange-400 fill-orange-400' : 'text-gray-200')} />)}</div>
-                                                                    </div>
+                                        {/* Reviews List */}
+                                        <div className="space-y-2.5">
+                                            {reviewLoading ? (
+                                                <div className="flex justify-center py-6"><Loader2 className="animate-spin text-[#45B0E2]" size={20} /></div>
+                                            ) : reviews.length > 0 ? (
+                                                reviews.map((r, rIdx) => (
+                                                    <motion.div
+                                                        key={r._id}
+                                                        initial={{ opacity: 0, y: 6 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        transition={{ delay: 0.08 * rIdx }}
+                                                        className="p-3 rounded-lg border border-gray-100/70 space-y-1.5 hover:shadow-sm hover:border-gray-200/70 transition-all duration-300 bg-white"
+                                                    >
+                                                        <div className="flex justify-between items-start">
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="h-7 w-7 rounded-full bg-gradient-to-br from-sky-100 to-sky-50 flex items-center justify-center text-[9px] font-[800] text-[#45B0E2] ring-1 ring-sky-50">{r.userId?.name?.[0] || 'A'}</div>
+                                                                <div>
+                                                                    <p className="text-[11px] font-[700] text-gray-800">{r.userId?.name || 'Anonymous'}</p>
+                                                                    <div className="flex gap-0.5">{[...Array(5)].map((_, i) => <Star key={i} size={9} className={cn(i < r.rating ? 'text-orange-400 fill-orange-400' : 'text-gray-200')} />)}</div>
                                                                 </div>
-                                                                <span className="text-[9px] font-[600] text-gray-400">{new Date(r.createdAt).toLocaleDateString()}</span>
                                                             </div>
-                                                            <p className="text-[11px] text-gray-500 font-[500] leading-relaxed pl-9">{r.comment}</p>
-                                                        </motion.div>
-                                                    ))
-                                                ) : (
-                                                    <div className="py-8 text-center bg-gradient-to-b from-gray-50 to-white rounded-xl border border-dashed border-gray-200">
-                                                        <MessageSquare size={20} className="text-gray-300 mx-auto mb-1.5" />
-                                                        <p className="text-[10px] font-[600] text-gray-400 uppercase tracking-widest">No reviews yet — be the first!</p>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </motion.div>
+                                                            <span className="text-[9px] font-[600] text-gray-400">{new Date(r.createdAt).toLocaleDateString()}</span>
+                                                        </div>
+                                                        <p className="text-[11px] text-gray-500 font-[500] leading-relaxed pl-9">{r.comment}</p>
+                                                    </motion.div>
+                                                ))
+                                            ) : (
+                                                <div className="py-8 text-center bg-gradient-to-b from-gray-50 to-white rounded-xl border border-dashed border-gray-200">
+                                                    <MessageSquare size={20} className="text-gray-300 mx-auto mb-1.5" />
+                                                    <p className="text-[10px] font-[600] text-gray-400 uppercase tracking-widest">No reviews yet — be the first!</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </motion.div>
 
-                                        {/* Bottom spacer */}
-                                        <div className="h-6" />
-                                    </div>
+                                    {/* Bottom spacer */}
+                                    <div className="h-6" />
                                 </div>
                             </div>
+                        </div>
                     </motion.div>
 
                     {/* ============================================================ */}

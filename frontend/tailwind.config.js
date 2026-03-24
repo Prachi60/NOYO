@@ -1,4 +1,7 @@
 import tailwindcssAnimate from 'tailwindcss-animate';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -164,4 +167,4 @@ export default {
     },
   },
   plugins: [tailwindcssAnimate],
-}
+};

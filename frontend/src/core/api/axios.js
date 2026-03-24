@@ -14,9 +14,7 @@ axiosInstance.interceptors.request.use(
         const url = config.url;
         const pagePath = window.location.pathname;
 
-        // Determination strategy: 
-        // 1. If we are on a module-specific page (e.g. /seller/dashboard), prioritize that module's token
-        // This is crucial for shared APIs like /products or /admin/categories
+        // 1. Module-specific pages (Path-based detection)
         if (pagePath.startsWith('/seller')) {
             token = localStorage.getItem('auth_seller');
         } else if (pagePath.startsWith('/admin')) {
@@ -27,24 +25,19 @@ axiosInstance.interceptors.request.use(
             token = localStorage.getItem('auth_customer');
         }
 
-        // 2. Fallback to URL-based detection
+        // 2. URL-based detection (fallback or override for shared APIs)
         if (!token) {
-            if (url.startsWith('/seller')) token = localStorage.getItem('auth_seller');
-            else if (url.startsWith('/admin')) token = localStorage.getItem('auth_admin');
-            else if (url.startsWith('/delivery')) token = localStorage.getItem('auth_delivery');
-            else if (url.startsWith('/customer') || url.startsWith('/cart') || url.startsWith('/wishlist') || url.startsWith('/categories') || url.startsWith('/products')) {
+            if (url.includes('/admin')) token = localStorage.getItem('auth_admin');
+            else if (url.includes('/seller')) token = localStorage.getItem('auth_seller');
+            else if (url.includes('/delivery')) token = localStorage.getItem('auth_delivery');
+            else if (url.includes('/customer') || url.includes('/cart') || url.includes('/wishlist') || url.includes('/categories') || url.includes('/products')) {
                 token = localStorage.getItem('auth_customer');
             }
         }
 
-        // 3. Final default: if we are on a general page and STILL no token, try customer token
-        if (!token && !pagePath.startsWith('/admin') && !pagePath.startsWith('/seller') && !pagePath.startsWith('/delivery')) {
-            token = localStorage.getItem('auth_customer');
-        }
-
-        // 3. Last fallback: Check common 'token' key if implemented
+        // 3. Last fallback: Check common 'token' key or customer token
         if (!token) {
-            token = localStorage.getItem('token');
+            token = localStorage.getItem('auth_customer') || localStorage.getItem('token');
         }
 
         if (token) {
