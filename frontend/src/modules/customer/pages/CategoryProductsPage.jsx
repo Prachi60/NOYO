@@ -36,10 +36,10 @@ const CategoryProductsPage = () => {
                 const dbProds = Array.isArray(prodRes.data.results)
                     ? prodRes.data.results
                     : Array.isArray(rawResult?.items)
-                    ? rawResult.items
-                    : Array.isArray(rawResult)
-                    ? rawResult
-                    : [];
+                        ? rawResult.items
+                        : Array.isArray(rawResult)
+                            ? rawResult
+                            : [];
 
                 const formattedProds = dbProds.map(p => ({
                     ...p,
@@ -130,29 +130,42 @@ const CategoryProductsPage = () => {
                 {/* Sidebar */}
                 <aside className="w-[80px] border-r border-gray-50 flex flex-col bg-white overflow-y-auto hide-scrollbar sticky top-[60px] h-[calc(100vh-60px)] pb-32">
                     {subCategories.map((cat) => (
-                        <button
+                        <motion.button
                             key={cat.id}
                             onClick={() => setSelectedSubCategory(cat.id)}
+                            animate={{
+                                scale: selectedSubCategory === cat.id ? 1.12 : 1,
+                                backgroundColor: selectedSubCategory === cat.id ? "#f0f9ff" : "#ffffff"
+                            }}
+                            transition={{ type: "spring", stiffness: 400, damping: 25 }}
                             className={cn(
-                                "flex flex-col items-center py-4 px-1 gap-2 transition-all relative border-l-4",
+                                "flex flex-col items-center py-4 px-1 gap-2 relative border-l-4 transition-colors",
                                 selectedSubCategory === cat.id
-                                    ? "bg-[#f0f9ff] border-[#45B0E2]"
+                                    ? "border-[#45B0E2]"
                                     : "border-transparent hover:bg-gray-50"
                             )}
                         >
-                            <div className={cn(
-                                "w-12 h-12 rounded-2xl flex items-center justify-center p-2 transition-all duration-300",
-                                selectedSubCategory === cat.id ? "scale-110" : "grayscale opacity-70"
-                            )}>
+                            <motion.div
+                                animate={{
+                                    scale: selectedSubCategory === cat.id ? 1.35 : 1,
+                                    filter: selectedSubCategory === cat.id ? "grayscale(0%)" : "grayscale(100%)",
+                                    opacity: selectedSubCategory === cat.id ? 1 : 0.6
+                                }}
+                                className={cn(
+                                    "w-12 h-12 rounded-2xl flex items-center justify-center p-2 transition-all duration-300",
+                                )}
+                            >
                                 <img src={cat.icon} alt={cat.name} className="w-full h-full object-contain" />
-                            </div>
-                            <span className={cn(
-                                "text-[10px] text-center font-bold font-sans leading-tight px-1",
-                                selectedSubCategory === cat.id ? "text-[#45B0E2]" : "text-gray-500"
-                            )}>
+                            </motion.div>
+                            <motion.span 
+                                animate={{ scale: selectedSubCategory === cat.id ? 1.15 : 1 }}
+                                className={cn(
+                                    "text-[10px] text-center font-bold font-sans leading-tight px-1 transition-all",
+                                    selectedSubCategory === cat.id ? "text-[#45B0E2]" : "text-gray-500"
+                                )}>
                                 {cat.name}
-                            </span>
-                        </button>
+                            </motion.span>
+                        </motion.button>
                     ))}
                 </aside>
 
