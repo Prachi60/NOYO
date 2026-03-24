@@ -133,16 +133,16 @@ const CategoriesPage = () => {
     return (
         <div className="min-h-screen bg-white">
             <MainLocationHeader />
-            <div className="max-w-[1280px] mx-auto px-4 pt-[140px] md:pt-[150px] pb-20">
+            <div className="max-w-[1280px] mx-auto px-4 pt-[170px] md:pt-[200px] pb-20">
                 {groups.map((group, groupIdx) => (
-                    <div key={groupIdx} className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-500" style={{ animationDelay: `${groupIdx * 100}ms` }}>
+                    <div key={groupIdx} className="mb-6 animate-in fade-in slide-in-from-bottom-4 duration-500" style={{ animationDelay: `${groupIdx * 100}ms` }}>
                         {/* Group Title */}
-                        <h2 className="text-xl md:text-2xl font-black text-[#1A1A1A] mb-6 px-1">
+                        <h2 className="text-[16px] md:text-[20px] font-black text-[#1A1A1A] mb-3 px-1">
                             {group.title}
                         </h2>
 
                         {/* Categories Grid */}
-                        <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-x-3 gap-y-8">
+                        <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-x-3 gap-y-4">
                             {group.categories.map((category) => (
                                 <div key={category.id} className="flex flex-col group cursor-pointer">
                                     <Link
