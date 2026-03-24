@@ -34,9 +34,10 @@ export const getProducts = async (req, res) => {
     const finalCategoryId = category || categoryId;
     const finalSubcategoryId = subcategory || subcategoryId;
 
-    if (finalHeaderId) query.headerId = finalHeaderId;
-    if (finalCategoryId) query.categoryId = finalCategoryId;
-    if (finalSubcategoryId) query.subcategoryId = finalSubcategoryId;
+    if (finalHeaderId && finalHeaderId !== "all") query.headerId = finalHeaderId;
+    if (finalCategoryId && finalCategoryId !== "all") query.categoryId = finalCategoryId;
+    if (finalSubcategoryId && finalSubcategoryId !== "all")
+      query.subcategoryId = finalSubcategoryId;
 
     // Multiple categories: categoryIds=id1,id2
     if (categoryIds && typeof categoryIds === "string") {

@@ -157,17 +157,26 @@ const CategoryProductsPage = () => {
                 </aside>
 
                 {/* Content */}
-                <main className="flex-1 p-3 pb-24 bg-white space-y-4">
-                    <div className="grid grid-cols-2 gap-x-2 gap-y-4">
-                        {filteredProducts.map((product) => (
-                            <ProductCard key={product.id} product={product} compact={true} />
-                        ))}
-                        {filteredProducts.length === 0 && !isLoading && (
-                            <div className="col-span-2 py-20 text-center">
-                                <p className="text-gray-400 font-bold italic">No products found in this category</p>
-                            </div>
-                        )}
-                    </div>
+                <main className="flex-1 p-3 pb-24 bg-white min-h-[calc(100vh-60px)]">
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={selectedSubCategory}
+                            initial={{ x: 20, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            exit={{ x: -20, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: "easeOut" }}
+                            className="grid grid-cols-2 gap-x-2 gap-y-4"
+                        >
+                            {filteredProducts.map((product) => (
+                                <ProductCard key={product.id} product={product} compact={true} />
+                            ))}
+                            {filteredProducts.length === 0 && !isLoading && (
+                                <div className="col-span-2 py-20 text-center">
+                                    <p className="text-gray-400 font-bold italic">No products found in this category</p>
+                                </div>
+                            )}
+                        </motion.div>
+                    </AnimatePresence>
                 </main>
             </div>
 
